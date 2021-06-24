@@ -1,7 +1,28 @@
 from numpy import NaN
+import numpy as np
 import pandas as pd
 from tools import *
 import sys
+import math
+import matplotlib.pyplot as plt
+
+def std(data, mean, len):
+    ret = 0
+    for d in data:
+        if math.isnan(d) is False:
+            ret = ret + (d - mean)**2
+    ret = math.sqrt((ret / (len - 1)))
+    return ret
+
+def get_percentile(data, len, per):
+    ret = 0
+    i = (per/100) * (len - 1)
+    if i.is_integer():
+        return data[int(i)]
+    else:
+        i_down = math.floor(i)
+        i_up = math.ceil(i)
+        return (data[i_down] + data[i_up]) / 2
 
 def describe(data, feature, i):
     if i < 6:
@@ -9,14 +30,30 @@ def describe(data, feature, i):
     describe = {
         'Count': 0,
         'Mean':0,
+        'Std':0,
+        'Min': NaN,
+        '25%':0,
+        '50%':0,
+        '75%':0,
+        'Max': NaN,
     }
+    check = []
     for d in data:
-        describe['Count'] += 1
-        if d.isnull().values.any(): # finir describe et voir cmt check si une valeur est nan in pandas
-            print(d)
+        if math.isnan(d) is False:
+            describe['Mean'] = d + describe['Mean']
+            check.append(d)
+            if math.isnan(describe['Min']) or describe['Min'] > d:
+                describe['Min'] = d
+            if math.isnan(describe['Max']) or describe['Max'] < d:
+                describe['Max'] = d
+            describe['Count'] += 1
+    describe['Mean'] = describe['Mean'] / (describe['Count'])
+    describe['Std'] = std(data, describe['Mean'], describe['Count'])
+    check = sorted(check)
+    describe['25%'] = get_percentile(check, describe['Count'], 25)
+    describe['50%'] = get_percentile(check, describe['Count'], 50)
+    describe['75%'] = get_percentile(check, describe['Count'], 75)
     return describe
-    #for d in data:
-     #   print(d)
 
 if __name__ == '__main__':
     test = pd.read_csv(sys.argv[1])
@@ -28,4 +65,5 @@ if __name__ == '__main__':
         i = i + 1
         if description != -1:
             data_describe[features] = description
+    df = pd.DataFrame(test)
     print(pd.DataFrame(data_describe))
