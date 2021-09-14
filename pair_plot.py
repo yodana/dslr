@@ -11,5 +11,6 @@ if __name__ == '__main__':
         if i > 18 or i == 0 or features == "Arithmancy" or features == "Potions" or features == "Care of Magical Creatures":
             del test[features]
         i += 1
+    print(test)
     sns.pairplot(test, hue='Hogwarts House', height=1.5)
     plt.show()
