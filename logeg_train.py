@@ -1,19 +1,16 @@
+from lib.Math import *
 import pandas as pd
-from tools import *
 import sys
-import matplotlib.pyplot as plt
-import seaborn as sns
+from math import nan
 import numpy as np
-from Encoder import *
 from sklearn import preprocessing
 from sklearn import impute
-from Math import *
 
 class Matrice(object):
     def __init__(self, data, data_y):
         self.min_max_scaler = preprocessing.Normalizer()
         self.size_lines = np.size(data, 0)
-        self.size_columns = np.size(data, 1)
+        self.size_columns = np.size(data, 1) + 1
         self.resultat = np.zeros(shape=(self.size_columns, 6))
         self.X = self.get_X(data)
         self.theta = self.get_theta(self.size_columns)
@@ -33,19 +30,17 @@ class Matrice(object):
         std = []
         imputer = impute.SimpleImputer(missing_values=nan,strategy="mean")
         X = imputer.fit_transform(data)
-        print(X)
         for column in X.T:
             math = Math(column)
             X[:,i] = (column - math.mean) / math.std
             i += 1
             mean.append(math.mean)
             std.append(math.std)
-        self.resultat[:,0] = np.array(mean) 
+        mean.append(0)
+        std.append(0)
+        self.resultat[:,0] = np.array(mean)
         self.resultat[:,1] = np.array(std)
-        #X = self.min_max_scaler.fit_transform(X)
-        X[:,-1] = np.ones((self.size_lines))
-        print(X)
-        return X
+        return np.c_[X, np.ones((self.size_lines))]
     
     def get_Y(self, data, present_house):
         ret = []
@@ -69,27 +64,16 @@ class Matrice(object):
 
     def gradient_descent(self, k):
         for i in range(1, 1000):
-            self.theta = self.theta - 0.9 * self.gradient()
+            self.theta = self.theta - 0.5 * self.gradient()
         self.resultat[:,k+2] = self.theta[:,0]
-        plt.plot(self.X, self.model())
-        #plt.show()
 
 if __name__ == '__main__':
-    test = pd.read_csv(sys.argv[1])
+    file = pd.read_csv(sys.argv[1])
     i = 0
-    houses = test["Hogwarts House"]
-    for features in test.columns:
-        n = test[features].size
+    houses = file["Hogwarts House"]
+    for features in file.columns:
         if i < 6 or features == "Arithmancy" or features == "Potions" or features == "Care of Magical Creatures":
-            del test[features]
+            del file[features]
         i += 1
-    m = 0
-    n = test[features].size
-    c = np.ones((n))
-    imputer = impute.SimpleImputer(missing_values=nan,strategy="mean")
-    for features in test.columns:
-        a = np.array(test[features])
-        c = np.concatenate((a,c))
-        m += 1
-    c = np.reshape(c, (m + 1, n)).T
-    matrice = Matrice(c, houses)
+    matrice = np.array(file)
+    Matrice(matrice, houses)

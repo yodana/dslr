@@ -1,9 +1,6 @@
 from numpy import NaN
-import numpy as np
 import pandas as pd
-from tools import *
 import sys
-import math
 import matplotlib.pyplot as plt
 
 def repart_data_from_houses(data_houses, data, feature):
@@ -41,4 +38,4 @@ if __name__ == '__main__':
             data_houses = repart_data_from_houses(test['Hogwarts House'], test, features)
         i += 1
     df = pd.DataFrame(test)
-   # plt.show()
+    plt.show()

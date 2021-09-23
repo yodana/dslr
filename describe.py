@@ -1,21 +1,16 @@
 from numpy import NaN
-import numpy as np
 import pandas as pd
-from tools import *
 import sys
 import math
-import matplotlib.pyplot as plt
 
 def std(data, mean, len):
     ret = 0
     for d in data:
         if math.isnan(d) is False:
             ret = ret + (d - mean)**2
-    ret = math.sqrt((ret / (len - 1)))
-    return ret
+    return math.sqrt((ret / (len - 1)))
 
 def get_percentile(data, len, per):
-    ret = 0
     i = (per/100) * (len - 1)
     if i.is_integer():
         return data[int(i)]
@@ -24,7 +19,7 @@ def get_percentile(data, len, per):
         i_up = math.ceil(i)
         return (data[i_down] + data[i_up]) / 2
 
-def describe(data, feature, i):
+def describe(data, i):
     if i < 6:
         return -1
     describe = {
