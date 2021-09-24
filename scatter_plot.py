@@ -3,6 +3,8 @@ import sys
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
-    test = pd.read_csv(sys.argv[1])
-    plt.scatter(test['Herbology'], test['Astronomy'])
+    data = pd.read_csv(sys.argv[1])
+    plt.scatter(data['Defense Against the Dark Arts'], data['Astronomy'])
+    plt.xlabel("Defense Against the Dark Arts")
+    plt.ylabel("'Astronomy")
     plt.show()

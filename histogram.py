@@ -23,8 +23,8 @@ def repart_data_from_houses(data_houses, data, feature):
         i += 1
     plt.hist([notes_houses['Gryffindor'], notes_houses['Ravenclaw'], notes_houses['Hufflepuff'], notes_houses['Slytherin']], alpha = 0.5, color = ['red', 'blue', 'yellow', 'green'], label=['Gryffindor', 'Ravenclaw', 'Hufflepuff', 'Slytherin'], histtype = 'barstacked')
     plt.legend()
-    plt.xlabel("nombres")
-    plt.ylabel("notes")
+    plt.xlabel("notes")
+    plt.ylabel("nombres")
     plt.title(feature)
     plt.show()
  
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     count = 0
     i = 0
     for features in test.columns:
-        if i > 6:
+        if i >= 6:
             data_houses = repart_data_from_houses(test['Hogwarts House'], test, features)
         i += 1
     df = pd.DataFrame(test)
