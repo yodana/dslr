@@ -8,7 +8,7 @@ def std(data, mean, len):
     for d in data:
         if math.isnan(d) is False:
             ret = ret + (d - mean)**2
-    return math.sqrt((ret / (len - 1)))
+    return math.sqrt((ret / len))
 
 def get_percentile(data, len, per):
     i = (per/100) * (len)
