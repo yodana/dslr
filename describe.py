@@ -54,8 +54,6 @@ if __name__ == '__main__':
     count = 0
     i = 0
     data_describe = {}
-    notes = [9, 15, 13, 12, 12, 11, 10, 14, 10]
-    description = describe(notes, 7)
     for features in test.columns:
         description = describe(test[features], i)
         i = i + 1
